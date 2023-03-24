@@ -29,6 +29,14 @@ app.MapGet("/categories", async (ApplicationDBContext dBContext) =>
     return await dBContext.Categories.ToListAsync();
 });
 
+app.MapGet("categories/{id:int}", async (int id, ApplicationDBContext dBContext) => 
+{
+    if (id == 0) return Results.NotFound();
+    Category? category = await dBContext.Categories.FindAsync(id);
+    if (category == null) return Results.NotFound();
+    return Results.Ok(category);
+});
+
 app.MapPost("/categories", async (Category category, ApplicationDBContext dbContext) =>
 {
     if (category == null) return Results.BadRequest();
